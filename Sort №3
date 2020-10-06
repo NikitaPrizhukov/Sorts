@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// быстрая сортировка, разделяй и властвуй
+
+vector<int> qsort(vector<int> mas) {
+
+	if (mas.size() < 2) {
+		return mas;
+	}
+
+	vector<int> left;
+	vector<int> right;
+	int pivot = mas[0];
+
+	for (int i = 1; i < mas.size(); i++) {
+		if (mas[i] <= pivot) {
+			left.push_back(mas[i]);
+		}
+	}
+	for (int i = 0; i < mas.size(); i++) {
+		if (mas[i] > pivot) {
+			right.push_back(mas[i]);
+		}
+	}
+	mas.clear();
+
+	left = qsort(left);
+	right = qsort(right);
+
+	mas.reserve(left.size() + right.size() + 1);
+	mas.insert(mas.end(), left.begin(), left.end());
+	mas.push_back(pivot);
+	mas.insert(mas.end(), right.begin(), right.end());
+	left.clear();
+	right.clear();
+
+	return mas;
+}
+
+int main() {
+	int len;
+	cin >> len;
+
+	vector<int> mas;
+
+	for (int i = 0; i < len; i++) {
+		int c = 0;
+		cin >> c;
+		mas.push_back(c);
+	}
+
+	mas = qsort(mas);
+
+	for (int i = 0; i < mas.size(); i++) {
+		cout << mas[i] << " ";
+	}
+
+	return 0;
+}
