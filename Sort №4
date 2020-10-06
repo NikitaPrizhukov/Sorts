@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//вывести все номера не указаные в сразу в 2 массивах
+
+void qsort(vector<int> mas, int* mas_2, int lenStart, bool* reviu) {
+
+	if (mas.size() == 1) {
+		for (int i = 0; i < lenStart; i++) {
+			if (mas[0] == mas_2[i]) {
+				reviu[i] = true;
+				break;
+			}
+		}
+	}
+
+	if (mas.size() < 2) {
+		return;
+	}
+
+	vector<int> left;
+	vector<int> right;
+	int pivot = mas[0];
+
+	for (int i = 0; i < lenStart; i++) {
+		if (pivot == mas_2[i]) {
+			reviu[i] = true;
+			break;
+		}
+	}
+
+	for (int i = 1; i < mas.size(); i++) {
+		if (mas[i] <= pivot) {
+			left.push_back(mas[i]);
+		}
+	}
+	for (int i = 0; i < mas.size(); i++) {
+		if (mas[i] > pivot) {
+			right.push_back(mas[i]);
+		}
+	}
+
+	qsort(left, mas_2, lenStart, reviu);
+	qsort(right, mas_2, lenStart, reviu);
+	left.clear();
+	right.clear();
+
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false), std::cin.tie(0), std::cout.tie(0);
+	int lenStart;
+	cin >> lenStart;
+
+	int lenEnd;
+	cin >> lenEnd;
+
+	int* masStart = new int[lenStart];
+	vector<int> masEnd;
+
+	bool* reviu = new bool[lenStart];
+
+	for (int i = 0; i < lenStart; i++) {
+		cin >> masStart[i];
+		reviu[i] = false;
+	}
+
+	for (int i = 0; i < lenEnd; i++) {
+		int c = 0;
+		cin >> c;
+		masEnd.push_back(c);
+	}
+
+	qsort(masEnd, masStart, lenStart, reviu);
+
+	for (int i = 0; i < lenStart; i++) {
+		if (reviu[i]) {
+			cout << masStart[i] << " ";
+		}
+	}
+
+	return 0;
+}
