@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//сортортировать опираясь на список чисел, в котором порядок указывает на их вес,
+//тех котороых нет в списки, выести отсортированными в конце
+
+vector<int> qsort(vector<int> mas) {
+
+	if (mas.size() < 2) {
+		return mas;
+	}
+
+	vector<int> left;
+	vector<int> right;
+	int pivot = mas[0];
+
+	for (int i = 1; i < mas.size(); i++) {
+		if (mas[i] <= pivot) {
+			left.push_back(mas[i]);
+		}
+	}
+	for (int i = 0; i < mas.size(); i++) {
+		if (mas[i] > pivot) {
+			right.push_back(mas[i]);
+		}
+	}
+	mas.clear();
+
+	left = qsort(left);
+	right = qsort(right);
+
+	mas.reserve(left.size() + right.size() + 1);
+	mas.insert(mas.end(), left.begin(), left.end());
+	mas.push_back(pivot);
+	mas.insert(mas.end(), right.begin(), right.end());
+	left.clear();
+	right.clear();
+
+	return mas;
+}
+
+void originalSort(int* mas, int* vive, int lenMas, int lenVive) {
+
+	vector<int> ost;
+	int* copyVive = new int[lenVive];
+
+	for (int i = 0; i < lenVive; i++) {
+		copyVive[i] = 0;
+	}
+
+	if (lenVive == 0) {
+		for (int i = 0; i < lenMas; i++) {
+			ost.push_back(mas[i]);
+		}
+	}
+
+	for (int i = 0; i < lenMas; i++) {
+		for (int f = 0; f < lenVive; f++) {
+			if (mas[i] == vive[f]) {
+				copyVive[f]++;
+				break;
+			}
+			else if (f == lenVive - 1) {
+				ost.push_back(mas[i]);
+			}
+		}
+	}
+
+	ost = qsort(ost);
+
+	for (int i = 0; i < lenVive; i++) {
+		for (int f = 0; f < copyVive[i]; f++) {
+			cout << vive[i] << " ";
+		}
+	}
+	for (int i = 0; i < ost.size(); i++) {
+		cout << ost[i] << " ";
+	}
+}
+
+
+int main() {
+	int len;
+	cin >> len;
+
+	int* mas = new int[len];
+
+	for (int i = 0; i < len; i++) {
+		cin >> mas[i];
+	}
+
+	int lenVive;
+	cin >> lenVive;
+
+	int* vive = new int[lenVive];
+
+	for (int i = 0; i < lenVive; i++) {
+		cin >> vive[i];
+	}
+
+	originalSort(mas, vive, len, lenVive);
+
+	return 0;
+}
