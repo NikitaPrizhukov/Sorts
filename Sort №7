@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//нахождение оптимального количества садовников, которые обработают все участки
+
+void quicksort(int** mas, int first, int last)
+{
+	int* mid = new int[2];
+	int* count = new int[2];
+	int f = first, l = last;
+	mid[0] = mas[(f + l) / 2][0];
+	mid[1] = mas[(f + l) / 2][1];
+	do
+	{
+		while (mas[f][0] < mid[0]) f++;
+		while (mas[l][0] > mid[0]) l--;
+		if (f <= l) //перестановка элементов
+		{
+			count[0] = mas[f][0];
+			count[1] = mas[f][1];
+			mas[f][0] = mas[l][0];
+			mas[f][1] = mas[l][1];
+			mas[l][0] = count[0];
+			mas[l][1] = count[1];
+
+			f++;
+			l--;
+		}
+	} while (f < l);
+	if (first < l) quicksort(mas, first, l);
+	if (f < last) quicksort(mas, f, last);
+}
+
+void areaGarden(int** mas, int len) {
+
+	vector<int> area;
+
+
+	area.push_back(mas[0][0]);
+	int first = mas[0][0];
+	int second = mas[0][1];
+
+	for (int i = 1; i < len; i++) {
+		if (mas[i][0] > second) {
+			area.push_back(second);
+			first = mas[i][0];
+			area.push_back(first);
+			second = mas[i][1];
+		}
+		else if (mas[i][0] <= second) {
+			if (mas[i][1] > second) {
+				second = mas[i][1];
+			}
+		}
+		if (i == len - 1) {
+			area.push_back(second);
+		}
+	}
+
+
+	for (int i = 0; i < area.size(); i++) {
+		cout << area[i] << " " << area[i + 1] << endl;
+		i++;
+	}
+}
+
+
+int main() {
+	int len;
+	cin >> len;
+
+	int** mas = new int* [len];
+
+	for (int i = 0; i < len; i++) {
+		mas[i] = new int[2];
+	}
+
+	for (int i = 0; i < len; i++) {
+		cin >> mas[i][0] >> mas[i][1];
+	}
+
+	quicksort(mas, 0, len - 1);
+	areaGarden(mas, len);
+
+	return 0;
+}
