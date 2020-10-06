@@ -1,0 +1,142 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//сортировка матрицы по диагонали
+
+vector<int> qsort(vector<int> mas) {
+
+	if (mas.size() < 2) {
+		return mas;
+	}
+
+	vector<int> left;
+	vector<int> right;
+	int pivot = mas[0];
+
+	for (int i = 1; i < mas.size(); i++) {
+		if (mas[i] <= pivot) {
+			left.push_back(mas[i]);
+		}
+	}
+	for (int i = 0; i < mas.size(); i++) {
+		if (mas[i] > pivot) {
+			right.push_back(mas[i]);
+		}
+	}
+	mas.clear();
+
+	left = qsort(left);
+	right = qsort(right);
+
+	mas.reserve(left.size() + right.size() + 1);
+	mas.insert(mas.end(), left.begin(), left.end());
+	mas.push_back(pivot);
+	mas.insert(mas.end(), right.begin(), right.end());
+	left.clear();
+	right.clear();
+
+	return mas;
+}
+
+void originalSort(int** mas, int line,int tab) {
+
+	if (line == 1 || tab == 1) {
+		for (int i = 0; i < line; i++) {
+			for (int f = 0; f < tab; f++) {
+				cout << mas[i][f] << " ";
+			}
+			cout << endl;
+		}
+		return;
+	}
+
+	vector<int> diag;
+
+	int a = 0;
+	int b = 0;
+
+
+		for (int i = 0; i < tab-1; i++) {
+			a = 0;
+			for (int f = i;f < tab; f++) {
+				diag.push_back(mas[a][f]);
+				a++;
+				if (a == line) {
+					break;
+				}
+			}
+
+			a = 0;
+			diag = qsort(diag);
+			
+			for (int f = i; f < tab; f++) {
+				mas[a][f] = diag[a];
+				a++;
+				if (a == line) {
+					break;
+				}
+			}
+
+			diag.clear();
+		}
+
+		for (int i = 1; i < line - 1; i++) {
+			b = 0;
+			for (int f = i; f < line; f++) {
+				diag.push_back(mas[f][b]);
+				b++;
+				if (b == tab) {
+					break;
+				}
+			}
+
+			b = 0;
+			diag = qsort(diag);
+
+			for (int f = i; f < line; f++) {
+				mas[f][b] = diag[b];
+				b++;
+				if (b == tab) {
+					break;
+				}
+			}
+
+			diag.clear();
+		}
+
+		for (int i = 0; i < line; i++) {
+			for (int f = 0; f < tab; f++) {
+				cout << mas[i][f] << " ";
+			}
+			cout << endl;
+		}
+	
+}
+
+
+int main() {
+	
+	int line;
+	cin >> line;
+
+	int tab;
+	cin >> tab;
+
+	int** matrix = new int* [line];
+
+	for (int i = 0; i < line; i++) {
+		matrix[i] = new int[tab];
+	}
+
+
+	for (int i = 0; i < line; i++) {
+		for (int f = 0; f < tab; f++) {
+			cin >> matrix[i][f];
+		}
+	}
+
+	originalSort(matrix, line, tab);
+
+	return 0;
+}
