@@ -1,0 +1,99 @@
+#include <iostream>
+
+#include <string>
+
+using namespace std;
+
+//дан список чисел, нужно составить из них самое большое
+
+void quicksort(string* mas, int first, int last){
+
+    string mid;
+
+    string count;
+
+    int f = first, l = last;
+
+    mid = mas[(f + l) / 2];
+
+    do
+
+    {
+
+        while (mas[f] + mid > mid + mas[f]) f++;
+
+        while (mas[l] + mid < mid + mas[l]) l--;
+
+        if (f <= l) {
+
+            count = mas[f];
+
+            mas[f] = mas[l];
+
+            mas[l] = count;
+
+            f++;
+
+            l--;
+
+        }
+
+    } while (f < l);
+
+    if (first < l) quicksort(mas, first, l);
+
+    if (f < last) quicksort(mas, f, last);
+
+}
+
+
+
+string maxNumber(string* mas, int count) {
+
+    string bigNumber;
+
+    for (int i = 0; i < count; i++) {
+
+        bigNumber += mas[i];
+
+    }
+
+    return bigNumber;
+
+}
+
+
+
+int main() {
+
+    int count;
+
+    cin >> count;
+
+    string* mas = new string[count];
+
+
+
+    for (int i = 0; i < count; i++) {
+
+        cin >> mas[i];
+
+    }
+
+
+
+    quicksort(mas, 0, count - 1);
+
+
+
+    cout << maxNumber(mas, count);
+
+
+
+    delete[] mas;
+
+
+
+    return 0;
+
+}
