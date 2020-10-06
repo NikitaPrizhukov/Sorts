@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//разбиение на минимальные кусочки, сортировка, слияние
+
+void quicksort(int* mas, int first, int last)
+{
+	int mid;
+	int count;
+	int f = first, l = last;
+	mid = mas[(f + l) / 2];
+	do
+	{
+		while (mas[f] < mid) f++;
+		while (mas[l] > mid) l--;
+		if (f <= l) //перестановка элементов
+		{
+			count = mas[f];
+			mas[f] = mas[l];
+			mas[l] = count;
+
+
+			f++;
+			l--;
+		}
+	} while (f < l);
+	if (first < l) quicksort(mas, first, l);
+	if (f < last) quicksort(mas, f, last);
+}
+
+int originalSort(int* mas, int lenMas, int count = 0) {
+
+	if (lenMas < 1) {
+		return 0;
+	}
+	if (lenMas < 2) {
+		return 1;
+	}
+
+	int* sortMas = new int[lenMas];
+	for (int i = 0; i < lenMas; i++) {
+		sortMas[i] = mas[i];
+	}
+
+	quicksort(sortMas, 0, lenMas - 1);
+
+	int len = 0;
+
+	for (int i = 0; i < lenMas; i++) {
+		if (mas[i] > len) {
+			len = mas[i];
+		}
+		if (len == sortMas[i]) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
+
+int main() {
+
+	int len;
+	cin >> len;
+
+	int* matrix = new int[len];
+
+	for (int i = 0; i < len; i++) {
+
+		cin >> matrix[i];
+	}
+
+	cout << originalSort(matrix, len);
+
+	return 0;
+}
