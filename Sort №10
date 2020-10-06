@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+//расшифровать слово, найти самые длинные подслова из списка, если их несколько, то вывести наименьшее.
+
+struct Word {
+	string word;
+	int len;
+	int correl;
+
+	Word(string a) {
+		word = a;
+		len = word.size();
+		correl = 0;
+	}
+};
+
+string findWord(vector<Word> slovar, string shifr, int countWord) {
+
+	if (countWord == 0) {
+		return "";
+	}
+
+	vector<string> dop;
+
+	for (int i = 0; i < shifr.length(); i++) {
+		for (int f = 0; f < countWord; f++) {
+			if (slovar[f].word[slovar[f].correl] == shifr[i]) {
+				slovar[f].correl = slovar[f].correl + 1;
+			}
+		}
+	}
+
+	int max = 0;
+
+	for (int i = 0; i < countWord; i++) {
+		if (max < slovar[i].correl && slovar[i].correl - slovar[i].len == 0) {
+			max = slovar[i].correl;
+		}
+	}
+
+	for (int i = 0; i < countWord; i++) {
+		if (max == slovar[i].correl && slovar[i].correl - slovar[i].len == 0) {
+			dop.push_back(slovar[i].word);
+		}
+	}
+
+	if (dop.empty()) {
+		return "";
+	}
+
+	string an = dop[0];
+
+	for (int i = 0; i < dop.size(); i++) {
+		if (an > dop[i]) {
+			an = dop[i];
+		}
+	}
+	return an;
+}
+
+int main() {
+
+	vector<Word> slovar;
+	string shifr;
+	string text;
+
+	getline(cin, shifr);
+
+	int countWord;
+	cin >> countWord;
+
+	for (int i = 0; i < countWord; i++) {
+		cin >> text;
+		slovar.push_back(text);
+	}
+
+	cout << findWord(slovar, shifr, countWord);
+
+}
